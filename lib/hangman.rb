@@ -1,6 +1,7 @@
-#represents the hangman game
-class Hangman
+# frozen_string_literal: true
 
+# represents the hangman game
+class Hangman
   def initialize
     puts 'Welcome to Hangman!'
     @dictionary = File.read('dictionary.txt').split("\n")
@@ -10,43 +11,42 @@ class Hangman
 
   def new_word
     @word = @dictionary.sample
-    puts @word
     if @word.length > 2 && @word.length < 7
-      @current_progress = Array.new(@word.length, "_")
-      return @word
-    else new_word()
+      @current_progress = Array.new(@word.length, '_')
+      @word
+    else
+      new_word
     end
   end
-  
+
   def make_guess
     puts "You have #{@amount_of_mistakes} mistakes left"
     puts 'Guess a letter in the word!'
-    puts @current_progress.join(" ")
+    puts @current_progress.join(' ')
     @guess = gets.chomp.downcase
   end
 
-  def check_guess(guess)
+  def check_guess(_guess)
     number_wrong = 0
     @word.split('').each_with_index do |letter, index|
       if @guess == letter
         @current_progress[index] = @guess
-      else 
+      else
         number_wrong += 1
       end
     end
     if number_wrong == @word.length
       @amount_of_mistakes -= 1
-      if @amount_of_mistakes == 0
-        puts "You loose!"
+      if @amount_of_mistakes.zero?
+        puts 'You loose!'
         exit
       end
     end
-    if @current_progress.join("") == @word
-      puts "You win! The word was #{@word}."
-      exit
-    end
-  end
+    return unless @current_progress.join('') == @word
 
+    puts "You win! The word was #{@word}."
+    exit
+  end
 end
 
 game = Hangman.new
